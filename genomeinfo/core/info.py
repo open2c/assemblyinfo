@@ -72,10 +72,10 @@ def info(cls) -> None:
     GenomeInfo available entries:
         Species:
             human, mouse, rat
-        
+
         Assemblies (UCSC):
             hg38, mm10, rn6
-        
+
         Assemblies (NCBI):
             GRCh38, GRCm38, Rnor_6.0
 
@@ -193,6 +193,7 @@ def get_species_info(cls, species: Optional[str] = None) -> NoReturn:
     )
     print(msg)
 
+
 def get_organism_info(cls, organism: Optional[str] = None) -> NoReturn:
     """
     Prints the genome information for the specified organism common name.
@@ -258,7 +259,7 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
     Examples
     --------
     >>> GenomeInfo.get_assembly_info("hg38")
-        
+
         {
             'assembly_level': 'Chromosome',
             'assembly_method': None,
@@ -271,11 +272,9 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
         error_msg = (
             f"ERROR: You did not provide any assembly! Pick an assembly using the NCBI nomenclature from:\n\n",
             f"{cls._data['assembly'].unique().tolist()}\n\nor the UCSC nomenclature from:\n\n",
-            f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}"
+            f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}",
         )
-        raise ValueError(
-            error_msg
-        )
+        raise ValueError(error_msg)
 
     if assembly in cls._data["assembly"].tolist():
         local_db = cls._data.set_index("assembly").loc[assembly, :]
@@ -302,9 +301,7 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
             f"{cls._data['assembly'].unique().tolist()}\n\nor the UCSC nomenclature from:\n\n",
             f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}",
         )
-        raise ValueError(
-            error_msg
-        )
+        raise ValueError(error_msg)
 
 
 def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str, Any]:
@@ -318,7 +315,7 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
     assembly : str
         The name of the assembly.
 
-    Returns 
+    Returns
     -------
     Dict[str, Any]
         A dictionary containing detailed information about the assembly.
@@ -407,7 +404,7 @@ def available_patches(cls, assembly: Optional[str] = None) -> List[str]:
     Examples
     --------
     >>> GenomeInfo.available_patches('GRCh38')
-        
+
         ['GRCh38',
          'GRCh38.p1',
          'GRCh38.p2',
@@ -442,7 +439,7 @@ def available_species(cls) -> List[str]:
     Examples
     --------
     >>> GenomeInfo.available_species()
-        
+
         ['homo_sapiens', 'mus_musculus']
     """
     return cls._data.species.unique().tolist()
