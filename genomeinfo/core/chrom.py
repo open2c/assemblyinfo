@@ -40,6 +40,10 @@ def filter_chromosome_data(
     ------
     ValueError
         If the assembly is not found in the database.
+
+    Examples
+    --------
+    >>> GenomeInfo.filter_chromosome_data("hg38", roles=["assembled"])
     """
     if assembly in cls._data["assembly"].tolist():
         group = "assembly"
@@ -113,13 +117,21 @@ def get_chromnames(
     ------
     ValueError
         If the provider is not valid.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_chromnames("hg38", provider="ucsc")
     """
     if not provider or provider == "ucsc":
         colname = "name"
     elif provider in ["genbank", "refseq", "ncbi"]:
         colname = provider
     else:
-        raise ValueError(f"{provider} is not a valid provider!")
+        error_msg = (
+            f"{provider} is not a valid provider!\n",
+            "Valid providers are 'ucsc', 'genbank', 'refseq', 'ncbi'",
+        )
+        raise ValueError(error_msg)
 
     return cls.filter_chromosome_data(assembly, roles, units, length)[colname].tolist()
 
@@ -157,13 +169,21 @@ def get_chromsizes(
     ------
     ValueError
         If the provider is not valid.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_chromsizes("hg38", provider="ucsc")
     """
     if not provider or provider == "ucsc":
         colname = "name"
     elif provider in ["genbank", "refseq", "ncbi"]:
         colname = provider
     else:
-        raise ValueError(f"{provider} is not a valid provider!")
+        error_msg = (
+            f"{provider} is not a valid provider!\n",
+            "Valid providers are 'ucsc', 'genbank', 'refseq', 'ncbi'",
+        )
+        raise ValueError(error_msg)
 
     df = cls.filter_chromosome_data(assembly, roles, units, length)
     return df.set_index(colname)["length"]
@@ -202,6 +222,10 @@ def get_chrom_eq(
     ------
     ValueError
         If the provider is not valid.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_chrom_eq("hg38", providers=["ucsc", "genbank"])
     """
     if not providers:
         providers = ["name", "ncbi", "genbank", "refseq"]
@@ -225,6 +249,15 @@ def get_seqinfo(cls, assembly: str) -> pd.DataFrame:
     -------
     pd.DataFrame
         A DataFrame with sequence information.
+
+    Raises
+    ------
+    ValueError
+        If the assembly is not found in the database.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_seqinfo("hg38")
     """
     if assembly in cls._data["assembly"].tolist():
         group = "assembly"
@@ -233,6 +266,13 @@ def get_seqinfo(cls, assembly: str) -> pd.DataFrame:
     elif assembly in cls._data["patch"].dropna().tolist():
         group = "patch"
     else:
+        error_msg = (
+            f"{assembly} not in database!\n",
+            "Valid assemblies are:\n\n",
+            f"NCBI:\n{cls._data.assembly.unique().tolist()}\n\n",
+            f"UCSC:\n{cls._data.assembly_ucsc.dropna().unique().tolist()}\n\n",
+            f"Patch:\n{cls._data.patch.dropna().unique().tolist()}",
+        )
         raise ValueError(f"{assembly} not in database!")
 
     q1 = f'{group} == "{assembly}"'

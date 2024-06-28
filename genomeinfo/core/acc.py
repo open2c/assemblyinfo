@@ -27,6 +27,10 @@ def get_genbank_accession(cls, patch: str) -> str:
     ------
     ValueError
         If the patch is not provided.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_genbank_accession("GRCh38.p14")
     """
     if not patch:
         raise ValueError("ERROR: you must provide a patch!")
@@ -54,6 +58,10 @@ def get_refseq_accession(cls, patch: str) -> str:
     ------
     ValueError
         If the patch is not provided.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_refseq_accession("GRCh38.p14")
     """
     if not patch:
         raise ValueError("ERROR: you must provide a patch!")
@@ -81,6 +89,10 @@ def get_patch_from_accession(cls, accession: str) -> List[str]:
     ------
     ValueError
         If the accession is not provided or not found in the database.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_patch_from_accession("GCA_000001405.29")
     """
     if not accession:
         raise ValueError("ERROR: you must provide an accession!")
@@ -116,6 +128,10 @@ def get_assembly_from_accession(cls, accession: str) -> List[str]:
     ------
     ValueError
         If the accession is not provided or not found in the database.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_assembly_from_accession("GCA_000001405.29")
     """
     if not accession:
         raise ValueError("ERROR: you must provide an accession!")
