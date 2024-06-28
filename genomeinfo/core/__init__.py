@@ -1,5 +1,6 @@
 from .info import (
     info,
+    get_db,
     get_info,
     get_species_info,
     get_version,
@@ -29,6 +30,7 @@ from .chrom import (
 
 __all__ = [
     "info",
+    "get_db",
     "get_info",
     "get_species_info",
     "get_organism_info",
