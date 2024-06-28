@@ -1,0 +1,106 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "genomeinfo"
+version = "0.1.0"
+description = "A Python library for working with harmonized genome metadata"
+license = {text = "MIT"}
+authors = [
+  {name = "Open2C", email = "open.chromosome.collective@gmail.com"},
+]
+keywords = [
+    "genomics",
+    "bioinformatics",
+    "database",
+    "genome",
+    "annotation",
+    "metadata",
+    "reference",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+readme = "README.md"
+dependencies = [
+    "numpy>=1.10, <2",
+    "pandas>=1.3",
+    "importlib-resources ; python_version<'3.9'",
+    "pyarrow>=5.0",
+]
+test = [
+    "pytest",
+]
+
+[project.urls]
+homepage = "https://github.com/open2c/genomeinfo"
+documentation = ""
+repository = "https://github.com/open2c/genomeinfo"
+changelog = "https://github.com/open2c/genomeinfo/blob/main/CHANGES.md"
+
+[tool.hatch.build.targets.wheel]
+packages = ["genomeinfo"]
+
+[tool.ruff]
+target-version = "py37"
+exclude = [
+    ".venv",
+]
+
+[tool.ruff.lint]
+extend-select = [
+    "B",  # bugbear
+    # "C",  # mccabe complexity
+    # "D",  # pydocstyle
+    "E",  # style errors
+    "F",  # pyflakes
+    "I",  # isort
+    "RUF", # ruff-specific rules
+    "UP", # pyupgrade
+    "W",  # style  warnings
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["genomeinfo"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.pytest.ini_options]
+minversion = "7"
+log_cli_level = "info"
+xfail_strict = true
+addopts = [
+    "-ra",
+    "--showlocals",
+    "--strict-config",
+    "--strict-markers",
+]
+filterwarnings = ["ignore::PendingDeprecationWarning"]
+testpaths = ["tests"]
+pythonpath = "."
+
+[tool.hatch.envs.default]
+features = ["dev", "test", "docs"]
+
+[tool.hatch.envs.default.scripts]
+fix = "ruff check --fix ."
+lint = "ruff check bioframe tests"
+format = "ruff format bioframe tests"
+test = "pytest -v tests"
+docs = "sphinx-autobuild docs docs/_build/html"
+
+[tool.hatch.envs.test]
+features = ["dev", "test"]
+
+[[tool.hatch.envs.test.matrix]]
+python = ["3.8", "3.9", "3.10", "3.11"]
