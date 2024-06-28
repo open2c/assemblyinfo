@@ -1,0 +1,16 @@
+genbank_acc	refseq_acc	assembly_name	organism	species	genbank_path	refseq_path	level
+GCA_000002985.3	GCF_000002985.3	WBcel235	Caenorhabditis elegans	caenorhabditis_elegans	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/002/985	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/985	Complete Genome
+GCA_000001405.29	GCF_000001405.29	GRCh38.p14	Homo sapiens	homo_sapiens	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/405	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405	Chromosome
+GCA_000001635.9	GCF_000001635.9	GRCm39	Mus musculus	mus_musculus	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/635	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/635	Chromosome
+GCA_000001215.4	GCF_000001215.4	Release 6 plus ISO1 MT	Drosophila melanogaster	drosophila_melanogaster	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/001/215	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/215	Chromosome
+GCA_000002035.4	GCF_000002035.4	GRCz11	Danio rerio	danio_rerio	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/002/035	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/035	Chromosome
+GCA_002263795.4	GCF_002263795.4	ARS-UCD2.0	Bos taurus	bos_taurus	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/263/795	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/263/795	Chromosome
+GCA_016699485.1	GCF_016699485.1	bGalGal1.mat.broiler.GRCg7b	Gallus gallus	gallus_gallus	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/016/699/485	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/016/699/485	Chromosome
+GCA_011100685.1	GCF_011100685.1	UU_Cfam_GSD_1.0	Canis lupus familiaris	canis_lupus_familiaris	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/011/100/685	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/011/100/685	Chromosome
+GCA_009914755.4	GCF_009914755.4	T2T-CHM13v2.0	Homo sapiens	homo_sapiens	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/009/914/755	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/914/755	Complete Genome
+GCA_033170195.2	GCF_033170195.2	ASM3317019v2	Danio rerio	danio_rerio	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/033/170/195	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/033/170/195	Complete Genome
+GCA_000002285.4	GCF_000002285.4	Dog10K_Boxer_Tasha	Canis lupus familiaris	canis_lupus_familiaris	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/002/285	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/285	Chromosome
+GCA_014441545.1	GCF_014441545.1	ROS_Cfam_1.0	Canis lupus familiaris	canis_lupus_familiaris	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/014/441/545	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/014/441/545	Chromosome
+GCA_000002315.5	GCF_000002315.5	GRCg6a	Gallus gallus	gallus_gallus	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/000/002/315	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/002/315	Chromosome
+GCA_005444595.1	GCF_005444595.1	UMICH_Zoey_3.1	Canis lupus familiaris	canis_lupus_familiaris	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/005/444/595	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/005/444/595	Chromosome
+GCA_028201415.1	GCF_028201415.1	ASM2820141v1	Caenorhabditis elegans	caenorhabditis_elegans	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/028/201/415	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/028/201/415	Complete Genome
