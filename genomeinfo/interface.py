@@ -2,7 +2,7 @@ import pandas as pd
 import pyarrow.parquet as pq
 import pyarrow as pa
 import numpy as np
-from typing import Any, Dict, List, Optional, Self
+from typing import Self, NoReturn
 from pathlib import Path
 import os
 
@@ -19,7 +19,7 @@ class GenomeInfo:
             cls._instance._load_db()
         return cls._instance
 
-    def _load_db(self) -> None:
+    def _load_db(self) -> NoReturn:
         """Private method to connect to the database."""
         self._data = pq.read_table(self._db_path).to_pandas()
 
