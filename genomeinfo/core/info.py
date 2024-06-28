@@ -1,9 +1,10 @@
 import pandas as pd
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, NoReturn
 
 __all__ = [
     "info",
+    "get_db",
     "get_info",
     "get_species_info",
     "get_organism_info",
@@ -18,19 +19,83 @@ __all__ = [
 
 
 def get_db(cls) -> pd.DataFrame:
-    """Returns the entire database as a pandas DataFrame."""
+    """
+    Returns the GenomeInfo database.
+
+    This method returns the database stored in the class attribute `_data`.
+
+    Parameters
+    ----------
+    cls : type
+        The class object containing the GenomeInfo data.
+
+    Returns
+    -------
+    pd.DataFrame
+        The database stored in the class attribute `_data`.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_db()
+    """
+
     return cls._data
 
 
 def info(cls) -> None:
-    data = cls._data
-    msg = f"""
-    GenomeInfo available entries:
-        species: {data["species"].unique()}
-        assemblies (UCSC): {data["assembly_ucsc"].unique()}
-        assemblies (NCBI): {data["assembly"].unique()}
-        Please pick an entry and retrieve your desired data!
     """
+    Display information about available entries in GenomeInfo.
+
+    This method prints a formatted message showing the unique values for
+    species, UCSC assemblies, and NCBI assemblies available in the
+    GenomeInfo data.
+
+    Parameters
+    ----------
+    cls : type
+        The class object containing the GenomeInfo data.
+
+    Returns
+    -------
+    None
+        This method doesn't return any value, it only prints information.
+
+    Notes
+    -----
+    The data is accessed through the `_data` attribute of the class, which
+    is expected to be a pandas DataFrame with columns 'species',
+    'assembly_ucsc', and 'assembly'.
+
+    Examples
+    --------
+    >>> GenomeInfo.info()
+    GenomeInfo available entries:
+        Species:
+            human, mouse, rat
+        
+        Assemblies (UCSC):
+            hg38, mm10, rn6
+        
+        Assemblies (NCBI):
+            GRCh38, GRCm38, Rnor_6.0
+
+    Please pick an entry and retrieve your desired data!
+    """
+    data = cls._data
+    species_list = data["species"].unique().tolist()
+    species_names = data["common_name"].unique().tolist()
+    assemblies_ucsc = data["assembly_ucsc"].dropna().unique().tolist()
+    assemblies_ncbi = data["assembly"].unique().tolist()
+
+    msg = (
+        "Genome Information:\n"
+        "===================\n"
+        f"Species:\n  - {', '.join(species_list)}\n\n"
+        f"Common Names:\n  - {', '.join(species_names)}\n\n"
+        f"Assemblies (UCSC):\n  - {', '.join(assemblies_ucsc)}\n\n"
+        f"Assemblies (NCBI):\n  - {', '.join(assemblies_ncbi)}\n\n"
+        "Please pick an entry and retrieve your desired data!"
+    )
     print(msg)
 
 
@@ -54,6 +119,10 @@ def get_info(cls, key: str, value: Optional[str]) -> pd.DataFrame:
     ------
     ValueError
         If the value is None or the key is not found in the database.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_info("species", "homo_sapiens")
     """
     if value is None:
         raise ValueError(f"ERROR! Pick a {key}: {cls._data[key].unique()}")
@@ -82,7 +151,7 @@ def get_version(s: List[str]):
     return (0,)
 
 
-def get_species_info(cls, species: Optional[str] = None) -> None:
+def get_species_info(cls, species: Optional[str] = None) -> NoReturn:
     """
     Prints the genome information for the specified species.
 
@@ -90,14 +159,41 @@ def get_species_info(cls, species: Optional[str] = None) -> None:
     ----------
     species : Optional[str]
         The species name to filter by.
+
+    Returns
+    ----------
+    NoReturn
+
+    Examples
+    --------
+    >>> GenomeInfo.get_species_info("species", "homo_sapiens")
+
+        Genome Information for homo_sapiens:
+        ===================
+        Common Names:
+          - human
+
+        Assemblies (UCSC):
+          - hg19, hg38, hg17, hg18, hs1
+
+        Assemblies (NCBI):
+          - GRCh37, GRCh38, NCBI35, NCBI36, T2T-CHM13
     """
     local_db = cls.get_info("species", species)
-    print(
-        f'GenomeInfo data for {species}:\n\nname: {local_db["common_name"].unique()}\nassemblies (UCSC): {local_db["assembly_ucsc"].unique()}\nassemblies (NCBI): {local_db["assembly"].unique()}'
+    species_names = local_db["common_name"].unique().tolist()
+    assemblies_ucsc = local_db["assembly_ucsc"].dropna().unique().tolist()
+    assemblies_ncbi = local_db["assembly"].unique().tolist()
+
+    msg = (
+        f"Genome Information for {species}:\n"
+        "===================\n"
+        f"Common Names:\n  - {', '.join(species_names)}\n\n"
+        f"Assemblies (UCSC):\n  - {', '.join(assemblies_ucsc)}\n\n"
+        f"Assemblies (NCBI):\n  - {', '.join(assemblies_ncbi)}\n\n"
     )
+    print(msg)
 
-
-def get_organism_info(cls, organism: Optional[str] = None) -> None:
+def get_organism_info(cls, organism: Optional[str] = None) -> NoReturn:
     """
     Prints the genome information for the specified organism common name.
 
@@ -105,10 +201,38 @@ def get_organism_info(cls, organism: Optional[str] = None) -> None:
     ----------
     organism : Optional[str]
         The common name of the organism to filter by.
+
+    Returns
+    ----------
+    NoReturn
+
+    Examples
+    --------
+    >>> GenomeInfo.get_species_info("species", "homo_sapiens")
+
+        Genome Information for human:
+        ===================
+        Species:
+          - homo_sapiens
+
+        Assemblies (UCSC):
+          - hg19, hg38, hg17, hg18, hs1
+
+        Assemblies (NCBI):
+          - GRCh37, GRCh38, NCBI35, NCBI36, T2T-CHM13
+
     """
     local_db = cls.get_info("common_name", organism)
-    print(
-        f'GenomeInfo data for {organism}:\n\nspecies: {local_db["species"].unique()}\nassemblies (UCSC): {local_db["assembly_ucsc"].unique()}\nassemblies (NCBI): {local_db["assembly"].unique()}'
+    organism_names = local_db["species"].unique().tolist()
+    assemblies_ucsc = local_db["assembly_ucsc"].dropna().unique().tolist()
+    assemblies_ncbi = local_db["assembly"].unique().tolist()
+
+    msg = (
+        f"Genome Information for {organism}:\n"
+        "===================\n"
+        f"Species:\n  - {', '.join(organism_names)}\n\n"
+        f"Assemblies (UCSC):\n  - {', '.join(assemblies_ucsc)}\n\n"
+        f"Assemblies (NCBI):\n  - {', '.join(assemblies_ncbi)}\n\n"
     )
 
 
@@ -130,10 +254,27 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
     ------
     ValueError
         If the assembly is not provided or not found in the database.
+
+    Examples
+    --------
+    >>> GenomeInfo.get_assembly_info("hg38")
+        
+        {
+            'assembly_level': 'Chromosome',
+            'assembly_method': None,
+            'assembly_name': 'GRCh38',
+            'assembly_type': 'haploid-with-alt-loci',
+            'bioproject': 'PRJNA168',
+        }
     """
     if assembly is None:
+        error_msg = (
+            f"ERROR: You did not provide any assembly! Pick an assembly using the NCBI nomenclature from:\n\n",
+            f"{cls._data['assembly'].unique().tolist()}\n\nor the UCSC nomenclature from:\n\n",
+            f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}"
+        )
         raise ValueError(
-            f'ERROR: You did not provide any assembly! Pick an assembly using the NCBI nomenclature from: {cls._data["assembly"].unique()} or the UCSC nomenclature from: {cls._data["assembly_ucsc"].unique()}'
+            error_msg
         )
 
     if assembly in cls._data["assembly"].tolist():
@@ -156,8 +297,13 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
 
         return out
     else:
+        error_msg = (
+            f"ERROR: {assembly} not in database! Pick an assembly using the NCBI nomenclature from:\n\n",
+            f"{cls._data['assembly'].unique().tolist()}\n\nor the UCSC nomenclature from:\n\n",
+            f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}",
+        )
         raise ValueError(
-            f'ERROR: {assembly} not in database! Pick an assembly using the NCBI nomenclature from: {cls._data["assembly"].unique()} or the UCSC nomenclature from: {cls._data["assembly_ucsc"].unique()}'
+            error_msg
         )
 
 
@@ -172,10 +318,14 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
     assembly : str
         The name of the assembly.
 
-    Returnsenbank_accession	refseq_accession	genbank_path	refseq_path	species	assembly_ucsc	seqinfo
+    Returns 
     -------
     Dict[str, Any]
         A dictionary containing detailed information about the assembly.
+
+    Examples
+    --------
+    >>> GenomeInfo.build_assembly_info(local_db, "hg38")
     """
     if len(local_db.patch) > 1:
         latest = sorted(local_db.patch.tolist(), key=get_version, reverse=True)[0]
@@ -208,6 +358,23 @@ def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
     -------
     List[str]
         A list of available assemblies.
+
+    Raises
+    ------
+    ValueError
+        If the provider is not 'ucsc' or 'ncbi'.
+
+    Examples
+    --------
+    >>> GenomeInfo.available_assemblies()
+
+        ['WS144',
+         'WBcel215',
+         'WBcel235',
+         'WS190',
+         'WS195',
+         ...
+         ]
     """
     if not provider:
         return (
@@ -236,6 +403,26 @@ def available_patches(cls, assembly: Optional[str] = None) -> List[str]:
     -------
     List[str]
         A list of available patches.
+
+    Examples
+    --------
+    >>> GenomeInfo.available_patches('GRCh38')
+        
+        ['GRCh38',
+         'GRCh38.p1',
+         'GRCh38.p2',
+         'GRCh38.p3',
+         'GRCh38.p4',
+         'GRCh38.p5',
+         'GRCh38.p6',
+         'GRCh38.p7',
+         'GRCh38.p8',
+         'GRCh38.p9',
+         'GRCh38.p10',
+         'GRCh38.p11',
+         'GRCh38.p12',
+         'GRCh38.p13',
+         'GRCh38.p14']
     """
     if not assembly:
         return cls._data.patch.unique().tolist()
@@ -251,6 +438,12 @@ def available_species(cls) -> List[str]:
     -------
     List[str]
         A list of available species.
+
+    Examples
+    --------
+    >>> GenomeInfo.available_species()
+        
+        ['homo_sapiens', 'mus_musculus']
     """
     return cls._data.species.unique().tolist()
 
@@ -273,6 +466,17 @@ def available_accessions(cls, assembly: str) -> List[str]:
     ------
     ValueError
         If the assembly is not provided.
+
+    Examples:
+    ---------
+    >>> GenomeInfo.available_accessions('hg38')
+
+        ['GCA_000001405.15',
+         'GCA_000001405.16',
+         'GCA_000001405.17',
+         'GCA_000001405.18',
+         'GCA_000001405.19',
+         ...]
     """
     if not assembly:
         raise ValueError("ERROR: you must provide an assembly!")
