@@ -1,0 +1,7 @@
+*.py[cod]
+*__pycache__
+.cache
+.pytest_cache
+.ipynb_checkpoints/
+.venv/*
+*/__pycache__
