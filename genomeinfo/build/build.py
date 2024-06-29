@@ -7,19 +7,28 @@ from typing import List
 import pyarrow as pa
 import pyarrow.parquet as pq
 from schema import *
+import os
+from typing import Dict, List, Tuple, NoReturn
 
 try:
     from importlib.resources import files as resource_path
 except ImportError:
     from importlib_resources import files as resource_path
 
-import os
-from typing import Dict, List, Tuple, NoReturn
-
 
 def get_directories(url: str) -> List[str]:
     """
     Retrieves a list of directories from the given URL.
+
+    Parameters
+    ----------
+    url : str
+        The URL to fetch the directories from.
+
+    Returns
+    -------
+    List[str]
+        A list of directories found in the URL.
     """
     try:
         response = requests.get(url)
@@ -36,7 +45,19 @@ def get_directories(url: str) -> List[str]:
 
 
 def get_formatted_paths(paths: List[str]) -> List[Tuple]:
-    """Helper function to format the paths and extract relevant information."""
+    """
+    Helper function to format the paths and extract relevant information.
+
+    Parameters
+    ----------
+    paths : List[str]
+        A list of paths to format.
+
+    Returns
+    -------
+    List[Tuple]
+        A list of tuples containing the formatted path information.
+    """
     return [
         (
             "_".join(x.split("_", 2)[:2]),  # Accession
@@ -51,12 +72,39 @@ def get_formatted_paths(paths: List[str]) -> List[Tuple]:
 
 
 def create_dataframe(paths: List[str], columns: List[str]) -> pd.DataFrame:
-    """Helper function to create a DataFrame from formatted data."""
+    """
+    Helper function to create a DataFrame from formatted data.
+
+    Parameters
+    ----------
+    paths : List[str]
+        A list of paths to format.
+    columns : List[str]
+        A list of column names for the DataFrame.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the formatted path information.
+    """
     formatted_data = get_formatted_paths(paths)
     return pd.DataFrame(formatted_data, columns=columns)
 
 
 def build_db(raw_db: pd.DataFrame) -> pd.DataFrame:
+    """
+    Builds a DataFrame from the raw database.
+
+    Parameters
+    ----------
+    raw_db : pd.DataFrame
+        The raw database to build the DataFrame from.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the formatted path information.
+    """
     dfs = []
 
     for assembly, species in zip(raw_db["assembly_name"], raw_db["species"]):
@@ -81,6 +129,7 @@ def build_db(raw_db: pd.DataFrame) -> pd.DataFrame:
     main_df = pd.concat(dfs).reset_index(drop=True)
     main_df["assembly_x"].fillna(main_df["assembly_y"].to_dict(), inplace=True)
     main_df.drop(columns=["assembly_y"], inplace=True)
+
     main_df = main_df[
         [
             "assembly_x",
@@ -92,22 +141,19 @@ def build_db(raw_db: pd.DataFrame) -> pd.DataFrame:
             "species",
         ]
     ]
+
     main_df = main_df[~main_df["assembly_patch"].isin(ASSEMBLY_BLACKLIST)].rename(
         columns={"assembly_x": "assembly", "assembly_patch": "patch"}
     )
-    main_df["assembly"] = [
-        x.split("v")[0]
-        if x.startswith("T2T")
-        else x.split(".")[0]
-        if x.startswith("GRCh38.")
-        else x.split(".")[0]
-        if x.startswith("GRCh37.")
-        else x.split(".")[0]
-        if x.startswith("GRCm38.")
-        else x
-        for x in main_df["assembly"]
-    ]
+
+    main_df["assembly"] = main_df["assembly"].apply(lambda x: (
+        x.split("v")[0] if x.startswith("T2T") else
+        x.split(".")[0] if x.startswith(("GRCh38.", "GRCh37.", "GRCm38.")) else
+        x
+    ))
+
     main_df["assembly_ucsc"] = [ASSEMBLY_MAP[a] for a in main_df["assembly"]]
+
     main_df = main_df[
         ~main_df["refseq_accession"].isin(REFSEQ_BLACKLIST)
     ].convert_dtypes()
@@ -118,6 +164,16 @@ def build_db(raw_db: pd.DataFrame) -> pd.DataFrame:
 def retrieve_file_from_url(url: str, pattern: str) -> List[str]:
     """
     Retrieves a list of files from the given URL.
+
+    Parameters
+    ----------
+    url : str
+        The URL to fetch the files from.
+
+    Returns
+    -------
+    List[str]
+        A list of files found in the URL.
     """
     try:
         response = requests.get(url)
@@ -142,6 +198,16 @@ def get_metadata_info(url: str) -> Dict[str, str]:
     """
     Reads the report file line by line until a '##' is encountered,
     then splits the read lines and builds a dictionary from them.
+
+    Parameters
+    ----------
+    url : str
+        The URL to fetch the metadata from.
+
+    Returns
+    -------
+    Dict[str, str]
+        A dictionary containing the metadata information.
     """
     file = retrieve_file_from_url(url, "report.txt")
     report_dict = {}
@@ -171,6 +237,16 @@ def get_stats_info(url: str) -> pd.DataFrame:
     """
     Reads the stats file line by line, then splits the read
     lines and builds a dictionary from them.
+
+    Parameters
+    ----------
+    url : str
+        The URL to fetch the stats from.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the stats information.
     """
     file = retrieve_file_from_url(url, "stats.txt")
     dfs = []
@@ -210,6 +286,16 @@ def get_chromosome_info(url: str) -> pd.DataFrame:
     """
     Reads the report file line by line until a '##' is encountered,
     then splits the read lines and builds a dictionary from them.
+
+    Parameters
+    ----------
+    url : str
+        The URL to fetch the chromosome information from.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the chromosome information.
     """
     file = retrieve_file_from_url(url, "report.txt")
     dfs = []
@@ -250,16 +336,32 @@ def get_chromosome_info(url: str) -> pd.DataFrame:
 
 
 def process_chromosome_info(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Processes the chromosome information DataFrame.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame containing the chromosome information.
+
+    Returns
+    -------
+    pd.DataFrame
+        A processed DataFrame containing the chromosome information.
+    """
     df = df.drop(columns=["drop", "drop1"]).reset_index(drop=True)
     df["role"] = [role.split("-")[0] for role in df["role"]]
     df = df[~df["role"].isin(["pseudo"])]
+
     df["unit"] = [
         unit.split()[0].lower().strip() if unit.startswith("P") else unit
         for unit in df["unit"]
     ]
+
     df["name"].fillna(
         {idx: f"chr{x}" for idx, x in enumerate(df["ncbi"])}, inplace=True
     )
+
     df = df.dropna(how="all", axis=1)
 
     alias = {
@@ -271,6 +373,7 @@ def process_chromosome_info(df: pd.DataFrame) -> pd.DataFrame:
             )
         )
     }
+
     df["molecule"] = [
         alias[mol] if not mol is np.NaN and mol in alias.keys() else mol
         for mol in df["molecule"]
@@ -283,6 +386,20 @@ def process_chromosome_info(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def insert_stat_info(df: pd.DataFrame, idx: int, path: str):
+    """
+    Inserts the stats information into the DataFrame.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The DataFrame to insert the stats information into.
+
+    idx : int
+        The index of the DataFrame to insert the stats information into.
+
+    path : str
+        The path to the stats information.
+    """
     stats = get_stats_info(path)
     stats = stats[stats["unit-name"].isin(["all", "Primary Assembly", "non_nuclear"])]
     stats["molecule-type"].fillna("all", inplace=True)
@@ -334,3 +451,54 @@ def insert_stat_info(df: pd.DataFrame, idx: int, path: str):
         .reset_index()
         .to_dict(orient="records")
     )
+
+def builder(init_db: pd.DataFrame) -> pd.DataFrame:
+    """
+    Builds the database from the initial DataFrame.
+
+    Parameters
+    ----------
+    init_db : pd.DataFrame
+        The initial DataFrame to build the database from.
+
+    Returns
+    -------
+    pd.DataFrame
+        A DataFrame containing the formatted path information.
+    """
+    db = build_db(init_db).reset_index(drop=True)
+
+    db["seqinfo"] = [dict]*len(db)
+    db["metadata"] = [dict]*len(db)
+    
+    for idx in db.index:
+        path1 = db.loc[idx, "genbank_path"]
+        path2 = db.loc[idx, "refseq_path"]
+    
+        if pd.notna(path1):
+            report_metadata = get_metadata_info(path1)
+            chrom_df = get_chromosome_info(path1)
+            chrom_df = process_chromosome_info(chrom_df)
+            
+            db.at[idx,"seqinfo"] = chrom_df.to_dict(orient='records')
+            db.at[idx,"metadata"] = report_metadata
+            insert_stat_info(db, idx, path1)
+        else:
+            report_metadata = get_metadata_info(path2)
+            chrom_df = get_chromosome_info(path2)
+            chrom_df = process_chromosome_info(chrom_df)
+            
+            db.at[idx,"seqinfo"] = chrom_df.to_dict(orient='records')
+            db.at[idx,"metadata"] = report_metadata
+            insert_stat_info(db, idx, path2)
+            
+    for p in db.groupby("assembly").patch:
+        sorted_patches = sorted(p[-1].tolist(), key=get_version, reverse=True)
+        if len(sorted_patches) > 1:
+            patch = sorted_patches[1]
+        else:
+            patch = sorted_patches[0]
+        
+        db.loc[db.query(f"patch=='{patch}'").index, "version"] = "latest"
+
+    return db
