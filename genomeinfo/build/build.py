@@ -9,6 +9,7 @@ import pyarrow.parquet as pq
 from schema import *
 import os
 from typing import Dict, List, Tuple, NoReturn
+import re
 
 try:
     from importlib.resources import files as resource_path
@@ -146,11 +147,15 @@ def build_db(raw_db: pd.DataFrame) -> pd.DataFrame:
         columns={"assembly_x": "assembly", "assembly_patch": "patch"}
     )
 
-    main_df["assembly"] = main_df["assembly"].apply(lambda x: (
-        x.split("v")[0] if x.startswith("T2T") else
-        x.split(".")[0] if x.startswith(("GRCh38.", "GRCh37.", "GRCm38.")) else
-        x
-    ))
+    main_df["assembly"] = main_df["assembly"].apply(
+        lambda x: (
+            x.split("v")[0]
+            if x.startswith("T2T")
+            else x.split(".")[0]
+            if x.startswith(("GRCh38.", "GRCh37.", "GRCm38."))
+            else x
+        )
+    )
 
     main_df["assembly_ucsc"] = [ASSEMBLY_MAP[a] for a in main_df["assembly"]]
 
@@ -452,6 +457,27 @@ def insert_stat_info(df: pd.DataFrame, idx: int, path: str):
         .to_dict(orient="records")
     )
 
+
+def get_version(s: List[str]):
+    """
+    Extracts the version number from each string in a list.
+
+    Parameters
+    ----------
+    s : List[str]
+        A list of strings containing version numbers.
+
+    Returns
+    -------
+    Tuple[int]
+        A tuple containing the version number.
+    """
+    match = re.search(r"(\d+)(?:\.\d+)*$", s)
+    if match:
+        return tuple(map(int, match.group().split(".")))
+    return (0,)
+
+
 def builder(init_db: pd.DataFrame) -> pd.DataFrame:
     """
     Builds the database from the initial DataFrame.
@@ -468,37 +494,37 @@ def builder(init_db: pd.DataFrame) -> pd.DataFrame:
     """
     db = build_db(init_db).reset_index(drop=True)
 
-    db["seqinfo"] = [dict]*len(db)
-    db["metadata"] = [dict]*len(db)
-    
+    db["seqinfo"] = [dict] * len(db)
+    db["metadata"] = [dict] * len(db)
+
     for idx in db.index:
         path1 = db.loc[idx, "genbank_path"]
         path2 = db.loc[idx, "refseq_path"]
-    
+
         if pd.notna(path1):
             report_metadata = get_metadata_info(path1)
             chrom_df = get_chromosome_info(path1)
             chrom_df = process_chromosome_info(chrom_df)
-            
-            db.at[idx,"seqinfo"] = chrom_df.to_dict(orient='records')
-            db.at[idx,"metadata"] = report_metadata
+
+            db.at[idx, "seqinfo"] = chrom_df.to_dict(orient="records")
+            db.at[idx, "metadata"] = report_metadata
             insert_stat_info(db, idx, path1)
         else:
             report_metadata = get_metadata_info(path2)
             chrom_df = get_chromosome_info(path2)
             chrom_df = process_chromosome_info(chrom_df)
-            
-            db.at[idx,"seqinfo"] = chrom_df.to_dict(orient='records')
-            db.at[idx,"metadata"] = report_metadata
+
+            db.at[idx, "seqinfo"] = chrom_df.to_dict(orient="records")
+            db.at[idx, "metadata"] = report_metadata
             insert_stat_info(db, idx, path2)
-            
+
     for p in db.groupby("assembly").patch:
         sorted_patches = sorted(p[-1].tolist(), key=get_version, reverse=True)
         if len(sorted_patches) > 1:
             patch = sorted_patches[1]
         else:
             patch = sorted_patches[0]
-        
+
         db.loc[db.query(f"patch=='{patch}'").index, "version"] = "latest"
 
     return db
