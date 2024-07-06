@@ -1,10 +1,7 @@
-import pandas as pd
-import pyarrow.parquet as pq
-import pyarrow as pa
-import numpy as np
-from typing import Self, NoReturn
 from pathlib import Path
-import os
+from typing import NoReturn, Self
+
+import pyarrow.parquet as pq
 
 __all__ = ["GenomeInfo"]
 

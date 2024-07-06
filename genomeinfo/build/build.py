@@ -1,20 +1,16 @@
-import pandas as pd
+import re
+from typing import Dict, List, Tuple
+
 import numpy as np
+import pandas as pd
 import requests
 from bs4 import BeautifulSoup
-import functools
-from typing import List
-import pyarrow as pa
-import pyarrow.parquet as pq
 from schema import *
-import os
-from typing import Dict, List, Tuple, NoReturn
-import re
 
 try:
     from importlib.resources import files as resource_path
 except ImportError:
-    from importlib_resources import files as resource_path
+    pass
 
 
 def get_directories(url: str) -> List[str]:
@@ -38,7 +34,7 @@ def get_directories(url: str) -> List[str]:
             a.get_text() for a in soup.find_all("a") if a.get_text().endswith("/")
         ]
     except Exception as e:
-        print(f"Error fetching directories for {url}: {str(e)}")
+        print(f"Error fetching directories for {url}: {e!s}")
 
     if len(directories) == 0:
         print(f"error with {url}, 0 dirs")
@@ -187,7 +183,7 @@ def retrieve_file_from_url(url: str, pattern: str) -> List[str]:
             a.get_text() for a in soup.find_all("a") if a.get_text().endswith(pattern)
         ]
     except Exception as e:
-        print(f"Error fetching directories for {url}: {str(e)}")
+        print(f"Error fetching directories for {url}: {e!s}")
 
     if len(files) == 0:
         print(f"error with {url}, 0 dirs")
@@ -233,7 +229,7 @@ def get_metadata_info(url: str) -> Dict[str, str]:
             report_dict[key.strip().lower().replace(" ", "_")] = value.strip()
 
     except Exception as e:
-        print(f"Error reading report file from {url}: {str(e)}")
+        print(f"Error reading report file from {url}: {e!s}")
 
     return report_dict
 
@@ -282,7 +278,7 @@ def get_stats_info(url: str) -> pd.DataFrame:
                 dfs.append(inner_df)
 
     except Exception as e:
-        print(f"Error reading stats file from {url}: {str(e)}")
+        print(f"Error reading stats file from {url}: {e!s}")
 
     return pd.concat(dfs)
 
@@ -335,7 +331,7 @@ def get_chromosome_info(url: str) -> pd.DataFrame:
                 dfs.append(inner_df)
 
     except Exception as e:
-        print(f"Error reading report file from {url}: {str(e)}")
+        print(f"Error reading report file from {url}: {e!s}")
 
     return pd.concat(dfs)
 
@@ -380,7 +376,7 @@ def process_chromosome_info(df: pd.DataFrame) -> pd.DataFrame:
     }
 
     df["molecule"] = [
-        alias[mol] if not mol is np.NaN and mol in alias.keys() else mol
+        alias[mol] if mol is not np.NaN and mol in alias else mol
         for mol in df["molecule"]
     ]
 
