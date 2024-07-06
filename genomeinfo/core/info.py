@@ -1,6 +1,7 @@
-import pandas as pd
 import re
-from typing import Any, Dict, List, Optional, NoReturn
+from typing import Any, Dict, List, NoReturn, Optional
+
+import pandas as pd
 
 __all__ = [
     "info",
@@ -10,7 +11,7 @@ __all__ = [
     "get_organism_info",
     "build_assembly_info",
     "get_version",
-    "get_assembly_info",
+    "get_assembly_metadata",
     "available_assemblies",
     "available_patches",
     "available_species",
@@ -42,7 +43,7 @@ def get_db(cls) -> pd.DataFrame:
     return cls._data
 
 
-def info(cls) -> None:
+def info(cls) -> str:
     """
     Display information about available entries in GenomeInfo.
 
@@ -96,7 +97,8 @@ def info(cls) -> None:
         f"Assemblies (NCBI):\n  - {', '.join(assemblies_ncbi)}\n\n"
         "Please pick an entry and retrieve your desired data!"
     )
-    print(msg)
+
+    return msg
 
 
 def get_info(cls, key: str, value: Optional[str]) -> pd.DataFrame:
@@ -131,7 +133,7 @@ def get_info(cls, key: str, value: Optional[str]) -> pd.DataFrame:
     return local_db
 
 
-def get_version(s: List[str]):
+def get_version(s: List[str]) -> str:
     """
     Extracts the version number from each string in a list.
 
@@ -151,7 +153,7 @@ def get_version(s: List[str]):
     return (0,)
 
 
-def get_species_info(cls, species: Optional[str] = None) -> NoReturn:
+def get_species_info(cls, species: Optional[str] = None) -> str:
     """
     Prints the genome information for the specified species.
 
@@ -191,10 +193,11 @@ def get_species_info(cls, species: Optional[str] = None) -> NoReturn:
         f"Assemblies (UCSC):\n  - {', '.join(assemblies_ucsc)}\n\n"
         f"Assemblies (NCBI):\n  - {', '.join(assemblies_ncbi)}\n\n"
     )
-    print(msg)
+
+    return msg
 
 
-def get_organism_info(cls, organism: Optional[str] = None) -> NoReturn:
+def get_organism_info(cls, organism: Optional[str] = None) -> str:
     """
     Prints the genome information for the specified organism common name.
 
@@ -236,8 +239,10 @@ def get_organism_info(cls, organism: Optional[str] = None) -> NoReturn:
         f"Assemblies (NCBI):\n  - {', '.join(assemblies_ncbi)}\n\n"
     )
 
+    return msg
 
-def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
+
+def get_assembly_metadata(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
     """
     Retrieves the detailed information for the specified assembly.
 
@@ -258,7 +263,7 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
 
     Examples
     --------
-    >>> GenomeInfo.get_assembly_info("hg38")
+    >>> GenomeInfo.get_assembly_metadata("hg38")
 
         {
             'assembly_level': 'Chromosome',
@@ -270,7 +275,7 @@ def get_assembly_info(cls, assembly: Optional[str] = None) -> Dict[str, Any]:
     """
     if assembly is None:
         error_msg = (
-            f"ERROR: You did not provide any assembly! Pick an assembly using the NCBI nomenclature from:\n\n",
+            "ERROR: You did not provide any assembly! Pick an assembly using the NCBI nomenclature from:\n\n",
             f"{cls._data['assembly'].unique().tolist()}\n\nor the UCSC nomenclature from:\n\n",
             f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}",
         )
@@ -334,7 +339,7 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
 
     return core | {
         "species": local_db.species.unique()[0],
-        "name": local_db.common_name.unique()[0],
+        "common_name": local_db.common_name.unique()[0],
         "synonyms": [local_db.assembly.unique()[0], local_db.assembly_ucsc.unique()[0]],
         "patches": local_db.patch.tolist(),
         "genbank": local_db.genbank_accession.tolist(),
@@ -378,13 +383,12 @@ def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
             cls._data.assembly.unique().tolist()
             + cls._data.assembly_ucsc.unique().tolist()
         )
+    elif provider == "ucsc":
+        return cls._data.assembly_ucsc.unique().tolist()
+    elif provider == "ncbi":
+        return cls._data.assembly.unique().tolist()
     else:
-        if provider == "ucsc":
-            return cls._data.assembly_ucsc.unique().tolist()
-        elif provider == "ncbi":
-            return cls._data.assembly.unique().tolist()
-        else:
-            raise ValueError("ERROR: provider must be either 'ucsc' or 'ncbi'!")
+        raise ValueError("ERROR: provider must be either 'ucsc' or 'ncbi'!")
 
 
 def available_patches(cls, assembly: Optional[str] = None) -> List[str]:
