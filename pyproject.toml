@@ -102,17 +102,16 @@ testpaths = ["tests"]
 pythonpath = "."
 
 [tool.hatch.envs.default]
-features = ["dev", "test", "docs"]
+features = ["dev", "docs"]
 
 [tool.hatch.envs.default.scripts]
 fix = "ruff check --fix ."
 lint = "ruff check bioframe tests"
 format = "ruff format bioframe tests"
-test = "pytest -v tests"
 docs = "sphinx-autobuild docs docs/_build/html"
 
 [tool.hatch.envs.test]
-features = ["dev", "test"]
+features = ["dev"]
 
 [[tool.hatch.envs.test.matrix]]
 python = ["3.8", "3.9", "3.10", "3.11"]
