@@ -1,31 +1,33 @@
+from .acc import (
+    get_assembly_from_accession,
+    get_genbank_accession,
+    get_patch_from_accession,
+    get_refseq_accession,
+)
+from .assembly import (
+    AssemblyInfo,
+    assembly_info,
+)
+from .chrom import (
+    filter_chromosome_data,
+    get_chrom_eq,
+    get_chromnames,
+    get_chromsizes,
+    get_seqinfo,
+)
 from .info import (
-    info,
-    get_db,
-    get_info,
-    get_species_info,
-    get_version,
-    get_organism_info,
-    build_assembly_info,
-    get_assembly_info,
+    available_accessions,
     available_assemblies,
     available_patches,
     available_species,
-    available_accessions,
-)
-
-from .acc import (
-    get_genbank_accession,
-    get_refseq_accession,
-    get_patch_from_accession,
-    get_assembly_from_accession,
-)
-
-from .chrom import (
-    filter_chromosome_data,
-    get_chromnames,
-    get_chromsizes,
-    get_chrom_eq,
-    get_seqinfo,
+    build_assembly_info,
+    get_assembly_metadata,
+    get_db,
+    get_info,
+    get_organism_info,
+    get_species_info,
+    get_version,
+    info,
 )
 
 __all__ = [
@@ -36,7 +38,7 @@ __all__ = [
     "get_organism_info",
     "get_version",
     "build_assembly_info",
-    "get_assembly_info",
+    "get_assembly_metadata",
     "available_assemblies",
     "available_patches",
     "available_species",
@@ -50,4 +52,6 @@ __all__ = [
     "get_chromsizes",
     "get_chrom_eq",
     "get_seqinfo",
+    "AssemblyInfo",
+    "assembly_info",
 ]
