@@ -1,5 +1,6 @@
-import pandas as pd
 from typing import List, Optional
+
+import pandas as pd
 
 __all__ = [
     "filter_chromosome_data",
@@ -229,9 +230,8 @@ def get_chrom_eq(
     """
     if not providers:
         providers = ["name", "ncbi", "genbank", "refseq"]
-    else:
-        if "ucsc" in providers:
-            providers = [p if p != "ucsc" else "name" for p in providers]
+    elif "ucsc" in providers:
+        providers = [p if p != "ucsc" else "name" for p in providers]
 
     return cls.filter_chromosome_data(assembly, roles, units, length)[providers]
 
@@ -273,7 +273,7 @@ def get_seqinfo(cls, assembly: str) -> pd.DataFrame:
             f"UCSC:\n{cls._data.assembly_ucsc.dropna().unique().tolist()}\n\n",
             f"Patch:\n{cls._data.patch.dropna().unique().tolist()}",
         )
-        raise ValueError(f"{assembly} not in database!")
+        raise ValueError(error_msg)
 
     q1 = f'{group} == "{assembly}"'
     q2 = 'version == "latest"'
