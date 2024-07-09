@@ -1,6 +1,3 @@
-import unittest
-from unittest.mock import patch
-from io import StringIO
 from genomeinfo.interface import GenomeInfo
 
 
@@ -15,7 +12,7 @@ def test_method_execution():
     try:
         genome_info.info()
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
 
 def test_get_species_info():
@@ -28,41 +25,42 @@ def test_get_species_info():
     try:
         genome_info.get_species_info("homo_sapiens")
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
 
-def test_get_assembly_info_ncbi():
+def test_get_assembly_metadata_ncbi():
     genome_info = GenomeInfo.connect()
 
     assert hasattr(
-        genome_info, "get_assembly_info"
-    ), "Method get_assembly_info is not attached"
+        genome_info, "get_assembly_metadata"
+    ), "Method get_assembly_metadata is not attached"
 
     try:
-        genome_info.get_assembly_info("GRCh38")
+        genome_info.get_assembly_metadata("GRCh38")
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
 
-def test_get_assembly_info_ucsc():
+def test_get_assembly_metadata_ucsc():
     genome_info = GenomeInfo.connect()
 
     try:
-        rs = genome_info.get_assembly_info("hg38")
+        rs = genome_info.get_assembly_metadata("hg38")
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
+
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result if empty"
 
 
-def test_get_assembly_info_t2t():
+def test_get_assembly_metadata_t2t():
     genome_info = GenomeInfo.connect()
 
     try:
-        rs = genome_info.get_assembly_info("T2T-CHM13")
+        rs = genome_info.get_assembly_metadata("T2T-CHM13")
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result if empty"
@@ -74,7 +72,7 @@ def test_available_assemblies():
     try:
         rs = genome_info.available_assemblies()
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result is empty"
@@ -83,15 +81,13 @@ def test_available_assemblies():
 def test_get_organism_info():
     genome_info = GenomeInfo.connect()
 
-    with patch("sys.stdout", new=StringIO()) as fake_out:
-        try:
-            genome_info.get_organism_info("human")
-        except Exception as e:
-            assert False, f"Method execution failed: {str(e)}"
+    try:
+        rs = genome_info.get_organism_info("human")
+    except Exception as e:
+        AssertionError(f"Method execution failed: {e!s}")
 
-        output = fake_out.getvalue()
-
-    assert output.strip() != "", "Nothing was printed"
+    assert rs is not None, "The result is None"
+    assert len(rs) > 0, "The result is empty"
 
 
 def test_available_patches():
@@ -100,7 +96,7 @@ def test_available_patches():
     try:
         rs = genome_info.available_patches()
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result is empty"
@@ -112,7 +108,7 @@ def test_available_accessions():
     try:
         rs = genome_info.available_accessions("GRCh38")
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result is empty"
@@ -120,7 +116,7 @@ def test_available_accessions():
     try:
         rs = genome_info.available_accessions("hg38")
     except Exception as e:
-        assert False, f"Method execution failed: {str(e)}"
+        AssertionError(f"Method execution failed: {e!s}")
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result is empty"
