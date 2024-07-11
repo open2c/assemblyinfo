@@ -106,8 +106,8 @@ features = ["dev", "docs"]
 
 [tool.hatch.envs.default.scripts]
 fix = "ruff check --fix ."
-lint = "ruff check bioframe tests"
-format = "ruff format bioframe tests"
+lint = "ruff check genomeinfo tests"
+format = "ruff format genomeinfo tests"
 docs = "sphinx-autobuild docs docs/_build/html"
 
 [tool.hatch.envs.test]
