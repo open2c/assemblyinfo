@@ -11,6 +11,7 @@ from importlib.metadata import metadata
 
 info = metadata("genomeinfo")
 project_name = info["Name"]
+project = "GenomeInfo"
 author = "Open2C"
 copyright = f"{datetime.now():%Y}, {author}."
 version = info["Version"]
