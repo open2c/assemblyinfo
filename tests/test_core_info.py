@@ -9,7 +9,8 @@ def test_method_attachment():
 def test_method_execution():
     genome_info = GenomeInfo.connect()
 
-    genome_info.info()
+    rs = genome_info.info()
+    assert rs is not None, "The result is None"
 
 
 def test_get_species_info():
