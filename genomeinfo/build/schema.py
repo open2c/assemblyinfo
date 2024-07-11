@@ -60,11 +60,9 @@ CELEGANS_ASSEMBLY_MAP = {
     "WBcel235": "ce11",
     "WS190": "ce6",
     "WS195": np.NaN,
-    "WS195": np.NaN,
     "ASM2820141v1": np.NaN,
 }
 DROSOPHILA_ASSEMBLY_MAP = {
-    "Release_5": "dm3",
     "Release_5": "dm3",
     "Release_6": "dm6",
     "Release_6_plus_ISO1_MT": "dm6",

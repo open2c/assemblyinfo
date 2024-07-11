@@ -1,4 +1,4 @@
-from typing import List, Optional
+from __future__ import annotations
 
 import pandas as pd
 
@@ -14,9 +14,9 @@ __all__ = [
 def filter_chromosome_data(
     cls,
     assembly: str,
-    roles: Optional[List[str]] = None,
-    units: Optional[List[str]] = None,
-    length: Optional[str] = None,
+    roles: list[str] | None = None,
+    units: list[str] | None = None,
+    length: str | None = None,
 ) -> pd.DataFrame:
     """
     Filters the chromosome data based on the provided parameters.
@@ -25,9 +25,9 @@ def filter_chromosome_data(
     ----------
     assembly : str
         The assembly name to filter by.
-    roles : Optional[List[str]]
+    roles : list[str], optional
         The roles to filter by.
-    units : Optional[List[str]]
+    units : list[str], optional
         The units to filter by.
     length : Optional[str]
         The length condition to filter by (e.g., '> 1000').
@@ -88,11 +88,11 @@ def filter_chromosome_data(
 def get_chromnames(
     cls,
     assembly: str,
-    provider: Optional[str] = None,
-    roles: Optional[List[str]] = None,
-    units: Optional[List[str]] = None,
-    length: Optional[str] = None,
-) -> List[str]:
+    provider: str | None = None,
+    roles: list[str] | None = None,
+    units: list[str] | None = None,
+    length: str | None = None,
+) -> list[str]:
     """
     Returns the chromosome names for the specified assembly.
 
@@ -140,10 +140,10 @@ def get_chromnames(
 def get_chromsizes(
     cls,
     assembly: str,
-    provider: Optional[str] = None,
-    roles: Optional[List[str]] = None,
-    units: Optional[List[str]] = None,
-    length: Optional[str] = None,
+    provider: str | None = None,
+    roles: list[str] | None = None,
+    units: list[str] | None = None,
+    length: str | None = None,
 ) -> pd.Series:
     """
     Returns the chromosome sizes for the specified assembly.
@@ -193,10 +193,10 @@ def get_chromsizes(
 def get_chrom_eq(
     cls,
     assembly: str,
-    providers: Optional[List[str]] = None,
-    roles: Optional[List[str]] = None,
-    units: Optional[List[str]] = None,
-    length: Optional[str] = None,
+    providers: list[str] | None = None,
+    roles: list[str] | None = None,
+    units: list[str] | None = None,
+    length: str | None = None,
 ) -> pd.DataFrame:
     """
     Returns the chromosome equivalence for the specified assembly.
