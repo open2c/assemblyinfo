@@ -161,10 +161,6 @@ def get_species_info(cls, species: Optional[str] = None) -> str:
     species : Optional[str]
         The species name to filter by.
 
-    Returns
-    ----------
-    NoReturn
-
     Examples
     --------
     >>> GenomeInfo.get_species_info("species", "homo_sapiens")
@@ -202,10 +198,6 @@ def get_organism_info(cls, organism: Optional[str] = None) -> str:
     ----------
     organism : Optional[str]
         The common name of the organism to filter by.
-
-    Returns
-    ----------
-    NoReturn
 
     Examples
     --------
