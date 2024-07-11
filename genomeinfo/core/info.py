@@ -326,14 +326,14 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
             f"patch=='{local_db.assembly.unique()[0]}'"
         ).metadata.tolist()[0]
 
-    return core | {
+    return dict(core, **{
         "species": local_db.species.unique()[0],
         "common_name": local_db.common_name.unique()[0],
         "synonyms": [local_db.assembly.unique()[0], local_db.assembly_ucsc.unique()[0]],
         "patches": local_db.patch.tolist(),
         "genbank": local_db.genbank_accession.tolist(),
         "refseq": local_db.refseq_accession.tolist(),
-    }
+    })
 
 
 def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
