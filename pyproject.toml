@@ -56,7 +56,7 @@ docs = [
 
 [project.urls]
 homepage = "https://github.com/open2c/genomeinfo"
-documentation = ""
+documentation = "https://genomeinfo.readthedocs.io"
 repository = "https://github.com/open2c/genomeinfo"
 changelog = "https://github.com/open2c/genomeinfo/blob/main/CHANGES.md"
 
