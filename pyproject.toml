@@ -46,8 +46,9 @@ dev = [
 ]
 docs = [
     "autodocsumm",
-    "myst_nb",
     "jinja2",
+    "myst_nb",
+    "nbsphinx",
     "Sphinx",
     "sphinx-autobuild",
     "sphinx_rtd_theme",
