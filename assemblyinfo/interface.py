@@ -1,21 +1,18 @@
-import pandas as pd
-import pyarrow.parquet as pq
-import pyarrow as pa
-import numpy as np
-from typing import Self, NoReturn
 from pathlib import Path
-import os
+from typing import NoReturn, Self
 
-__all__ = ["GenomeInfo"]
+import pyarrow.parquet as pq
+
+__all__ = ["AssemblyInfo"]
 
 
-class GenomeInfo:
+class AssemblyInfo:
     _instance = None
     _db_path = Path(__file__).parent / "data" / "db.parquet"
 
     def __new__(cls, *args, **kwargs) -> Self:
         if cls._instance is None:
-            cls._instance = super(GenomeInfo, cls).__new__(cls)
+            cls._instance = super().__new__(cls)
             cls._instance._load_db()
         return cls._instance
 
@@ -25,5 +22,5 @@ class GenomeInfo:
 
     @classmethod
     def connect(cls) -> Self:
-        """Returns the singleton instance of GenomeInfo."""
+        """Returns the singleton instance of AssemblyInfo."""
         return cls()

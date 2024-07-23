@@ -44,7 +44,7 @@ def filter_chromosome_data(
 
     Examples
     --------
-    >>> GenomeInfo.filter_chromosome_data("hg38", roles=["assembled"])
+    >>> AssemblyInfo.filter_chromosome_data("hg38", roles=["assembled"])
     """
     if assembly in cls._data["assembly"].tolist():
         group = "assembly"
@@ -121,7 +121,7 @@ def get_chromnames(
 
     Examples
     --------
-    >>> GenomeInfo.get_chromnames("hg38", provider="ucsc")
+    >>> AssemblyInfo.get_chromnames("hg38", provider="ucsc")
     """
     if not provider or provider == "ucsc":
         colname = "name"
@@ -173,7 +173,7 @@ def get_chromsizes(
 
     Examples
     --------
-    >>> GenomeInfo.get_chromsizes("hg38", provider="ucsc")
+    >>> AssemblyInfo.get_chromsizes("hg38", provider="ucsc")
     """
     if not provider or provider == "ucsc":
         colname = "name"
@@ -226,7 +226,7 @@ def get_chrom_eq(
 
     Examples
     --------
-    >>> GenomeInfo.get_chrom_eq("hg38", providers=["ucsc", "genbank"])
+    >>> AssemblyInfo.get_chrom_eq("hg38", providers=["ucsc", "genbank"])
     """
     if not providers:
         providers = ["name", "ncbi", "genbank", "refseq"]
@@ -257,7 +257,7 @@ def get_seqinfo(cls, assembly: str) -> pd.DataFrame:
 
     Examples
     --------
-    >>> GenomeInfo.get_seqinfo("hg38")
+    >>> AssemblyInfo.get_seqinfo("hg38")
     """
     if assembly in cls._data["assembly"].tolist():
         group = "assembly"

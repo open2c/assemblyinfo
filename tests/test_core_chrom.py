@@ -1,11 +1,11 @@
 import pandas as pd
 import pytest
 
-from genomeinfo.interface import GenomeInfo
+from assemblyinfo.interface import AssemblyInfo
 
 
 def test_filter_chromosome_data():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.filter_chromosome_data("GRCh38", roles=["assembled"])
     assert isinstance(result, pd.DataFrame)
@@ -35,7 +35,7 @@ def test_filter_chromosome_data():
 
 
 def test_get_chromnames():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_chromnames("GRCh38", roles=["assembled"])
     assert isinstance(result, list)
@@ -50,7 +50,7 @@ def test_get_chromnames():
 
 
 def test_get_chromsizes():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_chromsizes("GRCh38", roles=["assembled"])
     assert isinstance(result, pd.Series)
@@ -65,7 +65,7 @@ def test_get_chromsizes():
 
 
 def test_get_seqinfo():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_seqinfo("GRCh38")
     assert isinstance(result, pd.DataFrame)

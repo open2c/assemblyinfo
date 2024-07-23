@@ -1,1 +1,1 @@
-# genomeinfo
+# assemblyinfo

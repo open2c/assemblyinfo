@@ -1,20 +1,20 @@
-from genomeinfo.interface import GenomeInfo
+from assemblyinfo.interface import AssemblyInfo
 
 
 def test_method_attachment():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
     assert hasattr(db, "info"), "Method info is not attached"
 
 
 def test_method_execution():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.info()
     assert rs is not None, "The result is None"
 
 
 def test_get_species_info():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     assert hasattr(
         genome_info, "get_species_info"
@@ -27,7 +27,7 @@ def test_get_species_info():
 
 
 def test_get_assembly_metadata_ncbi():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     assert hasattr(
         genome_info, "get_assembly_metadata"
@@ -40,7 +40,7 @@ def test_get_assembly_metadata_ncbi():
 
 
 def test_get_assembly_metadata_ucsc():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.get_assembly_metadata("hg38")
 
@@ -50,7 +50,7 @@ def test_get_assembly_metadata_ucsc():
 
 
 def test_get_assembly_metadata_t2t():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.get_assembly_metadata("T2T-CHM13")
 
@@ -59,7 +59,7 @@ def test_get_assembly_metadata_t2t():
 
 
 def test_available_assemblies():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.available_assemblies()
 
@@ -68,7 +68,7 @@ def test_available_assemblies():
 
 
 def test_get_organism_info():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.get_organism_info("human")
 
@@ -77,7 +77,7 @@ def test_get_organism_info():
 
 
 def test_available_patches():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.available_patches()
 
@@ -86,7 +86,7 @@ def test_available_patches():
 
 
 def test_available_accessions():
-    genome_info = GenomeInfo.connect()
+    genome_info = AssemblyInfo.connect()
 
     rs = genome_info.available_accessions("GRCh38")
 

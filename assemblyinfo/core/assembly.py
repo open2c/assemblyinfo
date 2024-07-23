@@ -6,11 +6,11 @@ import pandas as pd
 from .chrom import filter_chromosome_data
 from .info import get_assembly_metadata
 
-__all__ = ["AssemblyInfo", "assembly_info"]
+__all__ = ["Assembly", "assembly_info"]
 
 
 @dataclass
-class AssemblyInfo:
+class Assembly:
     """
     A dataclass to store assembly information.
     """
@@ -47,7 +47,7 @@ def assembly_info(
     roles: Optional[List[str]] = None,
     units: Optional[List[str]] = None,
     length: Optional[str] = None,
-) -> AssemblyInfo:
+) -> Assembly:
     """
     Get assembly information for a given assembly.
     Parameters
@@ -92,7 +92,7 @@ def assembly_info(
 
     metadata = get_assembly_metadata(cls, assembly=assembly)
 
-    return AssemblyInfo(
+    return Assembly(
         assembly=assembly,
         species=metadata["species"],
         common_name=metadata["common_name"],

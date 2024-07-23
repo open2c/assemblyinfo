@@ -5,7 +5,7 @@ from .acc import (
     get_refseq_accession,
 )
 from .assembly import (
-    AssemblyInfo,
+    Assembly,
     assembly_info,
 )
 from .chrom import (
@@ -52,6 +52,6 @@ __all__ = [
     "get_chromsizes",
     "get_chrom_eq",
     "get_seqinfo",
-    "AssemblyInfo",
+    "Assembly",
     "assembly_info",
 ]
