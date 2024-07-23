@@ -21,14 +21,14 @@ __all__ = [
 
 def get_db(cls) -> pd.DataFrame:
     """
-    Returns the GenomeInfo database.
+    Returns the AssemblyInfo database.
 
     This method returns the database stored in the class attribute `_data`.
 
     Parameters
     ----------
     cls : type
-        The class object containing the GenomeInfo data.
+        The class object containing the AssemblyInfo data.
 
     Returns
     -------
@@ -37,7 +37,7 @@ def get_db(cls) -> pd.DataFrame:
 
     Examples
     --------
-    >>> GenomeInfo.get_db()
+    >>> AssemblyInfo.get_db()
     """
 
     return cls._data
@@ -45,16 +45,16 @@ def get_db(cls) -> pd.DataFrame:
 
 def info(cls) -> str:
     """
-    Display information about available entries in GenomeInfo.
+    Display information about available entries in AssemblyInfo.
 
     This method prints a formatted message showing the unique values for
     species, UCSC assemblies, and NCBI assemblies available in the
-    GenomeInfo data.
+    AssemblyInfo data.
 
     Parameters
     ----------
     cls : type
-        The class object containing the GenomeInfo data.
+        The class object containing the AssemblyInfo data.
 
     Returns
     -------
@@ -63,9 +63,9 @@ def info(cls) -> str:
 
     Examples
     --------
-    >>> GenomeInfo.info()
+    >>> AssemblyInfo.info()
     ```
-    GenomeInfo available entries:
+    AssemblyInfo available entries:
         Species:
             human, mouse, rat
         Assemblies (UCSC):
@@ -123,7 +123,7 @@ def get_info(cls, key: str, value: Optional[str]) -> pd.DataFrame:
 
     Examples
     --------
-    >>> GenomeInfo.get_info("species", "homo_sapiens")
+    >>> AssemblyInfo.get_info("species", "homo_sapiens")
     """
     if value is None:
         raise ValueError(f"ERROR! Pick a {key}: {cls._data[key].unique()}")
@@ -163,7 +163,7 @@ def get_species_info(cls, species: Optional[str] = None) -> str:
 
     Examples
     --------
-    >>> GenomeInfo.get_species_info("species", "homo_sapiens")
+    >>> AssemblyInfo.get_species_info("species", "homo_sapiens")
     ```
     Genome Information for homo_sapiens:
     Common Names:
@@ -201,7 +201,7 @@ def get_organism_info(cls, organism: Optional[str] = None) -> str:
 
     Examples
     --------
-    >>> GenomeInfo.get_species_info("species", "homo_sapiens")
+    >>> AssemblyInfo.get_species_info("species", "homo_sapiens")
     ```
     Genome Information for human:
     Species:
@@ -249,7 +249,7 @@ def get_assembly_metadata(cls, assembly: Optional[str] = None) -> Dict[str, Any]
 
     Examples
     --------
-    >>> GenomeInfo.get_assembly_metadata("hg38")
+    >>> AssemblyInfo.get_assembly_metadata("hg38")
         {
             'assembly_level': 'Chromosome',
             'assembly_method': None,
@@ -316,7 +316,7 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
 
     Examples
     --------
-    >>> GenomeInfo.build_assembly_info(local_db, "hg38")
+    >>> AssemblyInfo.build_assembly_info(local_db, "hg38")
     """
     if len(local_db.patch) > 1:
         latest = sorted(local_db.patch.tolist(), key=get_version, reverse=True)[0]
@@ -357,7 +357,7 @@ def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
 
     Examples
     --------
-    >>> GenomeInfo.available_assemblies()
+    >>> AssemblyInfo.available_assemblies()
     ```
         ['WS144',
          'WBcel215',
@@ -397,7 +397,7 @@ def available_patches(cls, assembly: Optional[str] = None) -> List[str]:
 
     Examples
     --------
-    >>> GenomeInfo.available_patches('GRCh38')
+    >>> AssemblyInfo.available_patches('GRCh38')
     ```
         ['GRCh38',
          'GRCh38.p1',
@@ -433,7 +433,7 @@ def available_species(cls) -> List[str]:
 
     Examples
     --------
-    >>> GenomeInfo.available_species()
+    >>> AssemblyInfo.available_species()
     ```
     ['homo_sapiens', 'mus_musculus']
     ```
@@ -462,7 +462,7 @@ def available_accessions(cls, assembly: str) -> List[str]:
 
     Examples
     ---------
-    >>> GenomeInfo.available_accessions('hg38')
+    >>> AssemblyInfo.available_accessions('hg38')
      ```
     ['GCA_000001405.15',
      'GCA_000001405.16',

@@ -9,9 +9,9 @@ from importlib.metadata import metadata
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-info = metadata("genomeinfo")
+info = metadata("assemblyinfo")
 project_name = info["Name"]
-project = "GenomeInfo"
+project = "AssemblyInfo"
 author = "Open2C"
 copyright = f"{datetime.now():%Y}, {author}."
 version = info["Version"]

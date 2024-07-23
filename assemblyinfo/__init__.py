@@ -1,20 +1,20 @@
 from __future__ import annotations
 
 from . import core
-from .interface import GenomeInfo
+from .interface import AssemblyInfo
 
 for module in [core]:
     for name, func in module.__dict__.items():
         if callable(func) and not name.startswith("_"):
-            setattr(GenomeInfo, name, func)
+            setattr(AssemblyInfo, name, func)
 
-__all__ = ["GenomeInfo"]
+__all__ = ["AssemblyInfo"]
 
 
-_db: GenomeInfo | None = None
+_db: AssemblyInfo | None = None
 
-def connect() -> GenomeInfo:
+def connect() -> AssemblyInfo:
     global _db
     if _db is None:
-        _db = GenomeInfo()
+        _db = AssemblyInfo()
     return _db

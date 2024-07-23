@@ -3,8 +3,8 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "genomeinfo"
-version = "0.1.0"
+name = "assemblyinfo"
+version = "0.0.1"
 description = "A Python library for working with harmonized genome metadata"
 license = {text = "MIT"}
 authors = [
@@ -55,13 +55,13 @@ docs = [
 ]
 
 [project.urls]
-homepage = "https://github.com/open2c/genomeinfo"
-documentation = "https://genomeinfo.readthedocs.io"
-repository = "https://github.com/open2c/genomeinfo"
-changelog = "https://github.com/open2c/genomeinfo/blob/main/CHANGES.md"
+homepage = "https://github.com/open2c/assemblyinfo"
+documentation = "https://assemblyinfo.readthedocs.io"
+repository = "https://github.com/open2c/assemblyinfo"
+changelog = "https://github.com/open2c/assemblyinfo/blob/main/CHANGES.md"
 
 [tool.hatch.build.targets.wheel]
-packages = ["genomeinfo"]
+packages = ["assemblyinfo"]
 
 [tool.ruff]
 target-version = "py37"
@@ -83,7 +83,7 @@ extend-select = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["genomeinfo"]
+known-first-party = ["assemblyinfo"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
@@ -107,8 +107,8 @@ features = ["dev", "docs"]
 
 [tool.hatch.envs.default.scripts]
 fix = "ruff check --fix ."
-lint = "ruff check genomeinfo tests"
-format = "ruff format genomeinfo tests"
+lint = "ruff check assemblyinfo tests"
+format = "ruff format assemblyinfo tests"
 docs = "sphinx-autobuild docs docs/_build/html"
 
 [tool.hatch.envs.test]

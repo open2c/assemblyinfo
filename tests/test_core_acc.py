@@ -1,10 +1,10 @@
 import pytest
 
-from genomeinfo.interface import GenomeInfo
+from assemblyinfo.interface import AssemblyInfo
 
 
 def test_get_genbank_accession():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_genbank_accession("GRCh38.p14")
     assert result == ["GCA_000001405.29"]
@@ -17,7 +17,7 @@ def test_get_genbank_accession():
 
 
 def test_get_refseq_accession():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_refseq_accession("GRCh38.p14")
     assert result == ["GCF_000001405.40"]
@@ -30,7 +30,7 @@ def test_get_refseq_accession():
 
 
 def test_get_patch_from_accession():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_patch_from_accession("GCF_000001405.40")
     assert result == ["GRCh38.p14"]
@@ -43,7 +43,7 @@ def test_get_patch_from_accession():
 
 
 def test_get_assembly_from_accession():
-    db = GenomeInfo.connect()
+    db = AssemblyInfo.connect()
 
     result = db.get_assembly_from_accession("GCA_000001405.29")
     assert result == ["GRCh38", "hg38"]
