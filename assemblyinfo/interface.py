@@ -4,10 +4,10 @@ from pathlib import Path
 
 import pyarrow.parquet as pq
 
-__all__ = ["GenomeInfo"]
+__all__ = ["AssemblyInfo"]
 
 
-class GenomeInfo:
+class AssemblyInfo:
     _instance = None
     _db_path = Path(__file__).parent / "data" / "db.parquet"
 
@@ -23,5 +23,5 @@ class GenomeInfo:
 
     @classmethod
     def connect(cls):
-        """Returns the singleton instance of GenomeInfo."""
+        """Returns the singleton instance of AssemblyInfo."""
         return cls()
