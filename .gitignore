@@ -10,3 +10,5 @@
 docs/_*
 docs/tutorials/.ipynb_checkpoints
 *.egg-info/
+
+dist/
