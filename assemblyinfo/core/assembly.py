@@ -35,8 +35,8 @@ class Assembly:
         return pd.DataFrame(self.aliases).T
 
     def __repr__(self):
-        return (f"Assembly(assembly={self.assembly}",
-                f"species={self.species}",
+        return (f"Assembly(assembly={self.assembly}, "
+                f"species={self.species}, "
                 f"common_name={self.common_name})")
 
 
