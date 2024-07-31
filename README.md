@@ -36,7 +36,7 @@ hg38 = db.assembly_info("hg38", roles=["assembled"])
 
 Easily allows getting chromosome sizes:
 
-```python
+```text
 hg38.chromsizes
 
 > name
@@ -47,7 +47,7 @@ hg38.chromsizes
 
 chromosome equivalences:
 
-```python
+```text
 hg38.chromeq
 
 >      ncbi     genbank        refseq
@@ -59,7 +59,7 @@ hg38.chromeq
 
 or assembly metadata:
 
-```python
+```text
 hg38.metadata
 
 > {'assembly_level': 'Chromosome',
