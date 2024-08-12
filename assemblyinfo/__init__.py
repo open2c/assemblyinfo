@@ -13,6 +13,7 @@ __all__ = ["AssemblyInfo"]
 
 _db: AssemblyInfo | None = None
 
+
 def connect() -> AssemblyInfo:
     global _db
     if _db is None:

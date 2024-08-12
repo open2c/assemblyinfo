@@ -38,9 +38,11 @@ class Assembly:
         return pd.DataFrame(self.aliases).T
 
     def __repr__(self):
-        return (f"Assembly(assembly={self.name}, "
-                f"species={self.species}, "
-                f"common_name={self.common_name})")
+        return (
+            f"Assembly(assembly={self.name}, "
+            f"species={self.species}, "
+            f"common_name={self.common_name})"
+        )
 
 
 def assembly_info(
@@ -85,11 +87,11 @@ def assembly_info(
 
     seqinfo = filter_chromosome_data(
         cls, assembly=assembly, roles=roles, units=units, length=length
-    ).drop_duplicates(subset=['name'], keep='first')
+    ).drop_duplicates(subset=["name"], keep="first")
 
     aliases = (
         seqinfo[["name", "ncbi", "genbank", "refseq"]]
-                .set_index(provider)
+        .set_index(provider)
         .to_dict(orient="index")
     )
 

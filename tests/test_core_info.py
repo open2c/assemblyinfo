@@ -24,7 +24,6 @@ def test_get_species_info():
     assert rs is not None, "The result is None"
 
 
-
 def test_get_assembly_metadata_ncbi():
     genome_info = AssemblyInfo.connect()
 
@@ -37,12 +36,10 @@ def test_get_assembly_metadata_ncbi():
     assert rs is not None, "The result is None"
 
 
-
 def test_get_assembly_metadata_ucsc():
     genome_info = AssemblyInfo.connect()
 
     rs = genome_info.get_assembly_metadata("hg38")
-
 
     assert rs is not None, "The result is None"
     assert len(rs) > 0, "The result if empty"

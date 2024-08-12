@@ -1,4 +1,3 @@
-
 from assemblyinfo.core.assembly import Assembly
 from assemblyinfo.interface import AssemblyInfo
 

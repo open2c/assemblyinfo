@@ -315,19 +315,22 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
     --------
     >>> AssemblyInfo.build_assembly_info(local_db, "hg38")
     """
-    core = local_db.query('version')
+    core = local_db.query("version")
 
-    return dict(core.metadata.tolist()[0], **{
-        "species": local_db.species.unique()[0],
-        "common_name": local_db.common_name.unique()[0],
-        "synonyms": [local_db.assembly.unique()[0], local_db.ucsc_name.unique()[0]],
-        "patches": local_db.patch.tolist(),
-        "genbank_accessions": local_db.genbank.tolist(),
-        "refseq_accessions": local_db.refseq.tolist(),
-        "genbank": core.genbank.tolist()[0],
-        "refseq": core.refseq.tolist()[0],
-        "patch": core.patch.tolist()[0],
-    })
+    return dict(
+        core.metadata.tolist()[0],
+        **{
+            "species": local_db.species.unique()[0],
+            "common_name": local_db.common_name.unique()[0],
+            "synonyms": [local_db.assembly.unique()[0], local_db.ucsc_name.unique()[0]],
+            "patches": local_db.patch.tolist(),
+            "genbank_accessions": local_db.genbank.tolist(),
+            "refseq_accessions": local_db.refseq.tolist(),
+            "genbank": core.genbank.tolist()[0],
+            "refseq": core.refseq.tolist()[0],
+            "patch": core.patch.tolist()[0],
+        },
+    )
 
 
 def available_assemblies(cls) -> pd.DataFrame:
@@ -359,7 +362,18 @@ def available_assemblies(cls) -> pd.DataFrame:
     2            WBcel235      ce11   GCA_000002985.3   GCF_000002985.6  caenorhabditis_elegans    celegans  <NA>     True
     ```
     """
-    return cls._data[['assembly', 'ucsc_name', 'genbank', 'refseq','species','common_name', 'patch', 'version']]
+    return cls._data[
+        [
+            "assembly",
+            "ucsc_name",
+            "genbank",
+            "refseq",
+            "species",
+            "common_name",
+            "patch",
+            "version",
+        ]
+    ]
 
 
 def available_patches(cls, assembly: Optional[str] = None) -> List[str]:
