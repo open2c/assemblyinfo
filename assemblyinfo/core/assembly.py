@@ -15,12 +15,15 @@ class Assembly:
     A dataclass to store assembly information.
     """
 
-    assembly: str
+    name: str
     species: str
     common_name: str
     seqinfo: pd.DataFrame
     metadata: Dict[str, str]
     aliases: Dict[str, Dict[str, str]]
+    genbank: str
+    refseq: str
+    patch: str
 
     @property
     def chromnames(self) -> List[str]:
@@ -35,7 +38,7 @@ class Assembly:
         return pd.DataFrame(self.aliases).T
 
     def __repr__(self):
-        return (f"Assembly(assembly={self.assembly}, "
+        return (f"Assembly(assembly={self.name}, "
                 f"species={self.species}, "
                 f"common_name={self.common_name})")
 
@@ -44,7 +47,7 @@ def assembly_info(
     cls,
     assembly: str,
     provider: Optional[str] = None,
-    roles: Optional[List[str]] = None,
+    roles: Optional[List[str]] = ["assembled"],
     units: Optional[List[str]] = None,
     length: Optional[str] = None,
 ) -> Assembly:
@@ -82,21 +85,24 @@ def assembly_info(
 
     seqinfo = filter_chromosome_data(
         cls, assembly=assembly, roles=roles, units=units, length=length
-    )
+    ).drop_duplicates(subset=['name'], keep='first')
 
     aliases = (
         seqinfo[["name", "ncbi", "genbank", "refseq"]]
-        .set_index(provider)
+                .set_index(provider)
         .to_dict(orient="index")
     )
 
     metadata = get_assembly_metadata(cls, assembly=assembly)
 
     return Assembly(
-        assembly=assembly,
+        name=assembly,
         species=metadata["species"],
         common_name=metadata["common_name"],
-        seqinfo=seqinfo.set_index(provider),
+        seqinfo=seqinfo.set_index(provider).dropna(axis=1, how="all"),
         metadata=metadata,
         aliases=aliases,
+        genbank=metadata["genbank"],
+        refseq=metadata["refseq"],
+        patch=metadata["patch"],
     )
