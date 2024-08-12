@@ -1,8 +1,6 @@
 from .acc import (
     get_assembly_from_accession,
-    get_genbank_accession,
     get_patch_from_accession,
-    get_refseq_accession,
 )
 from .assembly import (
     Assembly,
@@ -43,8 +41,6 @@ __all__ = [
     "available_patches",
     "available_species",
     "available_accessions",
-    "get_genbank_accession",
-    "get_refseq_accession",
     "get_patch_from_accession",
     "get_assembly_from_accession",
     "filter_chromosome_data",
