@@ -48,12 +48,12 @@ def filter_chromosome_data(
     """
     if assembly in cls._data["assembly"].tolist():
         group = "assembly"
-    elif assembly in cls._data["assembly_ucsc"].dropna().tolist():
-        group = "assembly_ucsc"
+    elif assembly in cls._data["ucsc_name"].dropna().tolist():
+        group = "ucsc_name"
     else:
         raise ValueError(f"{assembly} not in database!")
 
-    q1 = f'{group} == "{assembly}" and version == "latest"'
+    q1 = f'{group} == "{assembly}" and version'
     q2 = ""
 
     if length:
@@ -261,8 +261,8 @@ def get_seqinfo(cls, assembly: str) -> pd.DataFrame:
     """
     if assembly in cls._data["assembly"].tolist():
         group = "assembly"
-    elif assembly in cls._data["assembly_ucsc"].dropna().tolist():
-        group = "assembly_ucsc"
+    elif assembly in cls._data["ucsc_name"].dropna().tolist():
+        group = "ucsc_name"
     elif assembly in cls._data["patch"].dropna().tolist():
         group = "patch"
     else:
@@ -270,7 +270,7 @@ def get_seqinfo(cls, assembly: str) -> pd.DataFrame:
             f"{assembly} not in database!\n",
             "Valid assemblies are:\n\n",
             f"NCBI:\n{cls._data.assembly.unique().tolist()}\n\n",
-            f"UCSC:\n{cls._data.assembly_ucsc.dropna().unique().tolist()}\n\n",
+            f"UCSC:\n{cls._data.ucsc_name.dropna().unique().tolist()}\n\n",
             f"Patch:\n{cls._data.patch.dropna().unique().tolist()}",
         )
         raise ValueError(error_msg)

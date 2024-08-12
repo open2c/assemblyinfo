@@ -13,9 +13,6 @@ __all__ = [
     "get_version",
     "get_assembly_metadata",
     "available_assemblies",
-    "available_patches",
-    "available_species",
-    "available_accessions",
 ]
 
 
@@ -79,12 +76,12 @@ def info(cls) -> str:
     -----
     The data is accessed through the `_data` attribute of the class, which
     is expected to be a pandas DataFrame with columns 'species',
-    'assembly_ucsc', and 'assembly'.
+    'ucsc_name', and 'assembly'.
     """
     data = cls._data
     species_list = data["species"].unique().tolist()
     species_names = data["common_name"].unique().tolist()
-    assemblies_ucsc = data["assembly_ucsc"].dropna().unique().tolist()
+    assemblies_ucsc = data["ucsc_name"].dropna().unique().tolist()
     assemblies_ncbi = data["assembly"].unique().tolist()
 
     msg = (
@@ -176,7 +173,7 @@ def get_species_info(cls, species: Optional[str] = None) -> str:
     """
     local_db = cls.get_info("species", species)
     species_names = local_db["common_name"].unique().tolist()
-    assemblies_ucsc = local_db["assembly_ucsc"].dropna().unique().tolist()
+    assemblies_ucsc = local_db["ucsc_name"].dropna().unique().tolist()
     assemblies_ncbi = local_db["assembly"].unique().tolist()
 
     msg = (
@@ -214,7 +211,7 @@ def get_organism_info(cls, organism: Optional[str] = None) -> str:
     """
     local_db = cls.get_info("common_name", organism)
     organism_names = local_db["species"].unique().tolist()
-    assemblies_ucsc = local_db["assembly_ucsc"].dropna().unique().tolist()
+    assemblies_ucsc = local_db["ucsc_name"].dropna().unique().tolist()
     assemblies_ncbi = local_db["assembly"].unique().tolist()
 
     msg = (
@@ -264,7 +261,7 @@ def get_assembly_metadata(cls, assembly: Optional[str] = None) -> Dict[str, Any]
             "Pick an assembly using the NCBI nomenclature from:\n\n",
             f"{cls._data['assembly'].unique().tolist()}\n\n",
             "or the UCSC nomenclature from:\n\n",
-            f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}",
+            f"{cls._data['ucsc_name'].dropna().unique().tolist()}",
         )
         raise ValueError(error_msg)
 
@@ -278,12 +275,12 @@ def get_assembly_metadata(cls, assembly: Optional[str] = None) -> Dict[str, Any]
 
         return out
 
-    elif assembly in cls._data["assembly_ucsc"].dropna().tolist():
-        local_db = cls._data.set_index("assembly_ucsc").loc[assembly, :]
+    elif assembly in cls._data["ucsc_name"].dropna().tolist():
+        local_db = cls._data.set_index("ucsc_name").loc[assembly, :]
         if isinstance(local_db, pd.Series):
-            local_db = local_db.to_frame().T.reset_index(names="assembly_ucsc")
+            local_db = local_db.to_frame().T.reset_index(names="ucsc_name")
         else:
-            local_db = local_db.reset_index(names="assembly_ucsc")
+            local_db = local_db.reset_index(names="ucsc_name")
         out = cls.build_assembly_info(local_db, assembly)
 
         return out
@@ -293,7 +290,7 @@ def get_assembly_metadata(cls, assembly: Optional[str] = None) -> Dict[str, Any]
             "Pick an assembly using the NCBI nomenclature from:\n\n",
             f"{cls._data['assembly'].unique().tolist()}\n\n",
             "or the UCSC nomenclature from:\n\n",
-            f"{cls._data['assembly_ucsc'].dropna().unique().tolist()}",
+            f"{cls._data['ucsc_name'].dropna().unique().tolist()}",
         )
         raise ValueError(error_msg)
 
@@ -318,27 +315,27 @@ def build_assembly_info(cls, local_db: pd.DataFrame, assembly: str) -> Dict[str,
     --------
     >>> AssemblyInfo.build_assembly_info(local_db, "hg38")
     """
-    if len(local_db.patch) > 1:
-        latest = sorted(local_db.patch.tolist(), key=get_version, reverse=True)[0]
-        core = local_db.query(f"patch=='{latest}'").metadata.tolist()[0]
-    else:
-        core = local_db.query(
-            f"patch=='{local_db.assembly.unique()[0]}'"
-        ).metadata.tolist()[0]
+    core = local_db.query("version")
 
-    return dict(core, **{
-        "species": local_db.species.unique()[0],
-        "common_name": local_db.common_name.unique()[0],
-        "synonyms": [local_db.assembly.unique()[0], local_db.assembly_ucsc.unique()[0]],
-        "patches": local_db.patch.tolist(),
-        "genbank": local_db.genbank_accession.tolist(),
-        "refseq": local_db.refseq_accession.tolist(),
-    })
+    return dict(
+        core.metadata.tolist()[0],
+        **{
+            "species": local_db.species.unique()[0],
+            "common_name": local_db.common_name.unique()[0],
+            "synonyms": [local_db.assembly.unique()[0], local_db.ucsc_name.unique()[0]],
+            "patches": local_db.patch.tolist(),
+            "genbank_accessions": local_db.genbank.tolist(),
+            "refseq_accessions": local_db.refseq.tolist(),
+            "genbank": core.genbank.tolist()[0],
+            "refseq": core.refseq.tolist()[0],
+            "patch": core.patch.tolist()[0],
+        },
+    )
 
 
-def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
+def available_assemblies(cls) -> pd.DataFrame:
     """
-    Returns the list of available assemblies.
+    Returns a pd.DataFrame of available assemblies.
 
     Parameters
     ----------
@@ -347,8 +344,8 @@ def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
 
     Returns
     -------
-    List[str]
-        A list of available assemblies.
+    pd.DataFrame
+        A pd.DataFrame of available assemblies.
 
     Raises
     ------
@@ -359,26 +356,24 @@ def available_assemblies(cls, provider: Optional[str] = None) -> List[str]:
     --------
     >>> AssemblyInfo.available_assemblies()
     ```
-        ['WS144',
-         'WBcel215',
-         'WBcel235',
-         'WS190',
-         'WS195',
-         ...
-         ]
+    assembly ucsc_name           genbank            refseq                 species common_name patch  version
+    0               WS144      <NA>   GCA_000002985.1              <NA>  caenorhabditis_elegans    celegans  <NA>     True
+    1            WBcel215      <NA>   GCA_000002985.2   GCF_000002985.5  caenorhabditis_elegans    celegans  <NA>     True
+    2            WBcel235      ce11   GCA_000002985.3   GCF_000002985.6  caenorhabditis_elegans    celegans  <NA>     True
     ```
     """
-    if not provider:
-        return (
-            cls._data.assembly.unique().tolist()
-            + cls._data.assembly_ucsc.unique().tolist()
-        )
-    elif provider == "ucsc":
-        return cls._data.assembly_ucsc.unique().tolist()
-    elif provider == "ncbi":
-        return cls._data.assembly.unique().tolist()
-    else:
-        raise ValueError("ERROR: provider must be either 'ucsc' or 'ncbi'!")
+    return cls._data[
+        [
+            "assembly",
+            "ucsc_name",
+            "genbank",
+            "refseq",
+            "species",
+            "common_name",
+            "patch",
+            "version",
+        ]
+    ]
 
 
 def available_patches(cls, assembly: Optional[str] = None) -> List[str]:
@@ -476,7 +471,7 @@ def available_accessions(cls, assembly: str) -> List[str]:
 
     if assembly in cls._data["assembly"].tolist():
         db = cls._data.query(f"assembly=='{assembly}'")
-        return db["genbank_accession"].tolist() + db["refseq_accession"].tolist()
+        return db["genbank"].tolist() + db["refseq"].tolist()
     else:
-        db = cls._data.query(f"assembly_ucsc=='{assembly}'")
-        return db["genbank_accession"].tolist() + db["refseq_accession"].tolist()
+        db = cls._data.query(f"ucsc_name=='{assembly}'")
+        return db["genbank"].tolist() + db["refseq"].tolist()

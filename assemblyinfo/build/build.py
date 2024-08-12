@@ -60,13 +60,11 @@ def get_formatted_paths(paths: List[str]) -> List[Tuple]:
         (
             "_".join(x.split("_", 2)[:2]),  # Accession
             x.split("_", 2)[-1][:-1],  # assembly complete
-            x.split("_", 2)[-1][
-                :-1
-            ],
-            f"{NCBI}/{x.split('.', 1)[0].split('_')[0]}/" +
-            f"{x.split('.', 1)[0].split('_')[1][0:3]}/" +
-            f"{x.split('.', 1)[0].split('_')[1][3:6]}/" +
-            f"{x.split('.', 1)[0].split('_')[1][6:9]}/{x}",
+            x.split("_", 2)[-1][:-1],
+            f"{NCBI}/{x.split('.', 1)[0].split('_')[0]}/"
+            + f"{x.split('.', 1)[0].split('_')[1][0:3]}/"
+            + f"{x.split('.', 1)[0].split('_')[1][3:6]}/"
+            + f"{x.split('.', 1)[0].split('_')[1][6:9]}/{x}",
         )
         for x in paths
     ]
