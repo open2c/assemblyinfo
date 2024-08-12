@@ -8,13 +8,13 @@ def test_assembly_info_human():
     assembly = db.assembly_info(assembly="GRCh38")
 
     assert isinstance(assembly, Assembly)
-    assert assembly.assembly == "GRCh38"
+    assert assembly.name == "GRCh38"
     assert assembly.species == "homo_sapiens"
     assert assembly.common_name == "human"
 
     assembly = db.assembly_info(assembly="hg38")
 
     assert isinstance(assembly, Assembly)
-    assert assembly.assembly == "hg38"
+    assert assembly.name == "hg38"
     assert assembly.species == "homo_sapiens"
     assert assembly.common_name == "human"

@@ -64,20 +64,20 @@ def test_get_chromsizes():
         db.get_chromsizes("NonExistentAssembly")
 
 
-def test_get_seqinfo():
+def test_assembly_info():
     db = AssemblyInfo.connect()
 
-    result = db.get_seqinfo("GRCh38")
-    assert isinstance(result, pd.DataFrame)
+    result = db.assembly_info("GRCh38")
+    assert isinstance(result.seqinfo, pd.DataFrame)
 
-    result = db.get_seqinfo("T2T-CHM13")
-    assert isinstance(result, pd.DataFrame)
+    result = db.assembly_info("T2T-CHM13")
+    assert isinstance(result.seqinfo, pd.DataFrame)
 
-    result = db.get_seqinfo("canFam6")
-    assert isinstance(result, pd.DataFrame)
+    result = db.assembly_info("canFam6")
+    assert isinstance(result.seqinfo, pd.DataFrame)
 
-    result = db.get_seqinfo("GRCm38")
-    assert isinstance(result, pd.DataFrame)
+    result = db.assembly_info("GRCm38")
+    assert isinstance(result.seqinfo, pd.DataFrame)
 
     with pytest.raises(ValueError):
-        db.get_seqinfo("NonExistentAssembly")
+        db.assembly_info("NonExistentAssembly")
